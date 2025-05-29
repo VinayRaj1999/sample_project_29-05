@@ -1,0 +1,90 @@
+---
+title: "Sample_project_29/05"
+author: "Vinay Raj .N"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+
+```{r}
+library(dygraphs)
+library(plotly)
+library(xts)
+library(tidyverse)
+```
+
+```{r}
+# Example -1 simple time series 
+```{r}
+Nile_ts <- as.xts(Nile)
+dygraph(Nile_ts, main = "Nile River Flow")
+```
+
+```
+
+
+```{r}
+"city_day.csv" %>% 
+  read_csv() %>% 
+  select(c(Date,NO)) %>% 
+  dygraph(main = "NO Timeseries") %>% 
+  dyRangeSelector()
+```
+
+
+
+```{r}
+# Example-2 :Add Range selector 
+# Step 1: Convert 'Nile' to xts object
+Nile_ts <- as.xts(Nile)
+
+# Step 2: Create dygraph with range selector
+nile_graph <- dygraph(Nile_ts, main = "Nile River Flow") %>%
+  dyRangeSelector()
+
+# Step 3: Display the graph
+nile_graph
+
+```
+
+```{r}
+#  Example -3 : Multiple series 
+
+data<- cbind(mdeaths,fdeaths)
+data_xts <- as.xts(data)
+dygraph(data_xts,main = "Deaths iin the UK ") %>% 
+  dySeries("mdeaths",label = "Male") %>% 
+  dySeries("fdeaths",label="Female") %>% 
+  dyOptions(colors = c("blue","red")) %>% 
+  dyRangeSelector()
+```
+```{r,echo=FALSE}
+lungDeathsm <- cbind(mdeaths,fdeaths) 
+  dygraph(as.xts(lungDeathsm),main="comaparing deaths of male and female") %>% 
+  dySeries("mdeaths",color='darkblue',label = "Male") %>% 
+  dySeries("fdeaths",color='tomato',label = "Female") %>% 
+  dyHighlight(highlightCircleSize = 5,highlightSeriesBackgroundAlpha =0.2) %>% 
+  dyOptions(drawPoints = TRUE,pointSize = 2) %>% 
+  dyLegend(show = "auto") %>% # "auto","always","follow"
+    dyRangeSelector()
+
+```
+```{r}
+# -------------------------------------------------------------------
+# section 3 :plotly (interactive layer on ggplot)
+#--------------------------------------------------------------------
+  
+# Example-1: Convert ggplot  to plotly 
+  mtcars
+ggplot(mtcars,aes(x=wt,y=mpg,color = factor(cyl)))+
+    geom_point(size=3)+
+    labs(title = "Miles per Gallon vs weight ",
+         x="weight",y="mpg")->plot_p
+ggplotly(plot_p)
+```
+```{r}
+# Example -2
+plot_ly(data = mpg, x = ~class, type = "histogram")
+
+```
+
